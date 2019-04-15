@@ -11,7 +11,7 @@ export class RoomScene extends Phaser.Scene {
             if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
                 return decodeURIComponent(name[1]);
         };
-        this.roomID = get("gameID");
+        this.roomID = parseInt(get("gameID"));
         this.playerID = parseInt(get("playerID"));
         // this.username = get("username");
         this.username = get("username")
@@ -362,11 +362,8 @@ export class RoomScene extends Phaser.Scene {
         confirmButton.depth = 30;
 
         confirmButton.on("pointerup", ()=>{
-            if(this.to_play_card === true){
+            if (this.to_play_card === true) {
                 this.scale_back();
-                var index =  this.hand_cards_state.indexOf("to play");
-                removeCard(index);
-
                 // Sends to backend (type: attack, steal)
                 if (this.targetID !== -1) {
                     var tempObj = {};
@@ -382,6 +379,9 @@ export class RoomScene extends Phaser.Scene {
                     tempObj.SOURCE = this.playerID;
                     this.socket.send(JSON.stringify(tempObj));
                 }
+
+                var index =  this.hand_cards_state.indexOf("to play");
+                removeCard(index);
         	}
         });
       
