@@ -17,32 +17,30 @@
 			}
 		</style>
 		<%
-			String username = (String) session.getAttribute("username");
+			String username = request.getParameter("username");
 		%>
 		<script>
 			function validate() {
-				var roomID = document.myform.roomID.value;
-				console.log(roomID);
-				window.location.href = "./game-room.html?roomID=" + roomID + "&playerID=0";
+				var gameID = document.myform.gameID.value;
 				
 				var xhttp = new XMLHttpRequest();
-				xhttp.onreadystatechange = function() {
-					document.getElementById("usernameMessage").innerHTML = this.responseText;
-				}
-				// Send username to servlet
-				xhttp.open("GET", "Validate?gameID=" + document.myform.gameID.value, false);
+				xhttp.open("GET", "DirectServlet?gameID=" + gameID, false);
 				xhttp.send();
-				xhttp.responseText
+				
+				var playerID = xhttp.responseText;
+				var username = "<%= username %>";
+				
+				window.location.href = "./game-room.html?gameID=" + gameID + "&playerID=" + playerID + "&username=" + username;
 				return false;
 			}
 		</script>
 	</head>
 	<body>
 		<div id="center">
-			<form method="GET" name="myform" action="DirectServlet">
+			<form method="GET" name="myform" action="game-room.html" onSubmit="return validate()">
 				GAME ROOM ID<br />
 				<input type="text" name="gameID">
-				<button type="submit">Go</button>
+				<button type="submit" name="submit">Go</button>
 			</form>
 		</div>
 	</body>
