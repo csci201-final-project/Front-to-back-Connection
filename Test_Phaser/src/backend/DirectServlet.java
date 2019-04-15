@@ -1,6 +1,7 @@
 package backend;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,9 +30,13 @@ public class DirectServlet extends HttpServlet {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+		
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/FinalProject?user=root&password=zhitong1998&useSSL=false" + "&serverTimezone=UTC"); 
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/FinalProject?user=root&password=165683466&useSSL=false" + "&serverTimezone=UTC"); 
 			ps = conn.prepareStatement("SELECT * FROM Game WHERE realGameID = ?" );
 			ps.setInt(1,gameID);
 			rs = ps.executeQuery();
@@ -47,6 +52,8 @@ public class DirectServlet extends HttpServlet {
 				ps.setInt(2,gameID);
 				request.setAttribute("Index",toChange);
 				ps.executeUpdate();
+				
+				out.println(toChange);
 			}
 			else
 			{
@@ -56,6 +63,8 @@ public class DirectServlet extends HttpServlet {
 				ps.setInt(1, gameID);
 				ps.setInt(2, 0);
 				ps.executeUpdate();
+				
+				out.println(0);
 			}
 			if(ps!=null)
 			{
@@ -71,8 +80,7 @@ public class DirectServlet extends HttpServlet {
 		{
 			System.out.println("sqle "+ sqle.getMessage());
 		}
-		RequestDispatcher dispatch = getServletContext().getRequestDispatcher("/game-room.html");
-		dispatch.forward(request, response);
+		
 	}
 
 	
